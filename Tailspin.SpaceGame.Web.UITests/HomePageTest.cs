@@ -28,50 +28,46 @@ namespace UITests
             try
             {
                 // Create the driver for the current browser.
-                switch(browser)
+                switch (browser)
                 {
-                  case "Chrome":
-                        try
-                        {
-                            driver = new ChromeDriver(
-                                Environment.GetEnvironmentVariable("ChromeWebDriver")
-                            );
-                        }
-                        catch (Exception ex)
-                        {
-                            //Ignore
-                        }
-                    break;
-                  case "Firefox":
-                    driver = new FirefoxDriver(
-                        Environment.GetEnvironmentVariable("GeckoWebDriver")
-                    );
-                    break;
-                  case "Edge":
-                    driver = new EdgeDriver(
-                        Environment.GetEnvironmentVariable("EdgeWebDriver"),
-                        new EdgeOptions
-                        {
-                            UseChromium = true
-                        }
-                    );
-                    break;
-                  default:
-                    throw new ArgumentException($"'{browser}': Unknown browser");
+                    case "Chrome":
+                        driver = new ChromeDriver(
+                            Environment.GetEnvironmentVariable("ChromeWebDriver")
+                        );
+                        break;
+
+                    case "Firefox":
+                        driver = new FirefoxDriver(
+                            Environment.GetEnvironmentVariable("GeckoWebDriver")
+                        );
+                        break;
+
+                    case "Edge":
+                        driver = new EdgeDriver(
+                            Environment.GetEnvironmentVariable("EdgeWebDriver"),
+                            new EdgeOptions
+                            {
+                                UseChromium = true
+                            }
+                        );
+                        break;
+
+                    default:
+                        throw new ArgumentException($"'{browser}': Unknown browser");
                 }
 
                 // Wait until the page is fully loaded on every page navigation or page reload.
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
 
                 // Navigate to the site.
-                // The site name is stored in the SITE_URL environment variable to make 
+                // The site name is stored in the SITE_URL environment variable to make
                 // the tests more flexible.
                 string url = Environment.GetEnvironmentVariable("SITE_URL");
                 driver.Navigate().GoToUrl(url + "/");
 
                 // Wait for the page to be completely loaded.
                 new WebDriverWait(driver, TimeSpan.FromSeconds(10))
-                    .Until(d => ((IJavaScriptExecutor) d)
+                    .Until(d => ((IJavaScriptExecutor)d)
                         .ExecuteScript("return document.readyState")
                         .Equals("complete"));
             }
@@ -85,7 +81,7 @@ namespace UITests
                 Cleanup();
             }
         }
-    
+
         [OneTimeTearDown]
         public void Cleanup()
         {
@@ -125,7 +121,7 @@ namespace UITests
             {
                 // Click the close button that's part of the modal.
                 ClickElement(FindElement(By.ClassName("close"), modal));
-                
+
                 // Wait for the modal to close and for the main page to again be clickable.
                 FindElement(By.TagName("body"));
             }
@@ -140,7 +136,8 @@ namespace UITests
             // WebDriverWait enables us to wait for the specified condition to be true
             // within a given time period.
             return new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds))
-                .Until(c => {
+                .Until(c =>
+                {
                     IWebElement element = null;
                     // If a parent was provided, find its child element.
                     if (parent != null)

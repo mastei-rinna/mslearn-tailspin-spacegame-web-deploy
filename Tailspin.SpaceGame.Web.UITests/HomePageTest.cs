@@ -31,9 +31,16 @@ namespace UITests
                 switch(browser)
                 {
                   case "Chrome":
-                    driver = new ChromeDriver(
-                        Environment.GetEnvironmentVariable("ChromeWebDriver")
-                    );
+                        try
+                        {
+                            driver = new ChromeDriver(
+                                Environment.GetEnvironmentVariable("ChromeWebDriver")
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            //Ignore
+                        }
                     break;
                   case "Firefox":
                     driver = new FirefoxDriver(
